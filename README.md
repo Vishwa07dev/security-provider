@@ -9,6 +9,8 @@ Admin User (ROLE_ADMIN)
 username: admin-user@abc.com  
 password: Admin@123
 
+Prerequisites/Assumption: Connecting to aws rds mysql db.
+
 URLs  
 1. Generate Token:  
    url - http://localhost:8088/foodDelivery/security/generate-token  
