@@ -17,11 +17,9 @@ public class TokenProvider {
 
     private static final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    private final String JWT_SECRET ="some_secret_code";
 
-    @Value("${jwt.expirationInMs}")
-    private int jwtExpirationInMs;
+    private final int JWT_EXPIRATION_TIME_IN_MS = 60000;
 
     public String generateToken(UserPrincipal userPrincipal){
 
@@ -36,15 +34,15 @@ public class TokenProvider {
                 .setIssuer("Upgrad Demo")
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + jwtExpirationInMs * 10000))
+                .setExpiration(new Date(new Date().getTime() + JWT_EXPIRATION_TIME_IN_MS))
                 .claim("Roles", roles)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
 
     public boolean validateToken(String jwt) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
+            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(jwt);
             return true;
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");
@@ -62,6 +60,6 @@ public class TokenProvider {
 
     }
     public String getUserNameFromToken(String token){
-        return  Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+        return  Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token).getBody().getSubject();
     }
 }
